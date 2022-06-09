@@ -1,0 +1,78 @@
+//+------------------------------------------------------------------+
+//|                                                MrEmilisProj2.mq4 |
+//|                        Copyright 2021, MetaQuotes Software Corp. |
+//|                                             https://www.mql5.com |
+//+------------------------------------------------------------------+
+#property copyright "Copyright 2021, MetaQuotes Software Corp."
+#property link      "https://www.mql5.com"
+#property version   "1.00"
+#property strict
+//+------------------------------------------------------------------+
+//| Expert initialization function                                   |
+//+------------------------------------------------------------------+
+int OnInit()
+  {
+//---
+   
+//---
+   return(INIT_SUCCEEDED);
+  }
+//+------------------------------------------------------------------+
+//| Expert deinitialization function                                 |
+//+------------------------------------------------------------------+
+void OnDeinit(const int reason)
+  {
+//---
+   
+  }
+//+------------------------------------------------------------------+
+//| Expert tick function                                             |
+//+------------------------------------------------------------------+
+void OnTick()
+  {
+//---
+   
+   MqlRates priceInfo[];
+   ArraySetAsSeries(priceInfo,true);
+
+
+   int bars = Bars(_Symbol,PERIOD_CURRENT);
+
+   CopyRates(_Symbol,PERIOD_CURRENT,0,4,priceInfo);
+   
+   if(newCandleAppeared())
+     {
+     
+      if(priceInfo[1].close>priceInfo[2].high)
+        {
+        
+         ObjectCreate(_Symbol,"Buy"+bars,OBJ_ARROW_DOWN,0,TimeCurrent()-3600,(priceInfo[1].high+220*_Point));
+        
+        }
+      if(priceInfo[1].close<priceInfo[2].low)
+        {
+        
+         ObjectCreate(_Symbol,"Sell"+bars,OBJ_ARROW_UP,0,TimeCurrent()-3600,(priceInfo[1].low-110*_Point));
+        
+        }
+     }
+
+  }
+//+------------------------------------------------------------------+
+
+
+
+bool newCandleAppeared(){
+
+   static int lastBars;
+   
+   if(Bars>lastBars)
+     {
+     
+      lastBars=Bars;
+      return true;
+     
+     }
+   
+   return false;
+}

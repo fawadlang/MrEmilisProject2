@@ -35,7 +35,6 @@ void OnTick()
    MqlRates priceInfo[];
    ArraySetAsSeries(priceInfo,true);
 
-
    int bars = Bars(_Symbol,PERIOD_CURRENT);
 
    CopyRates(_Symbol,PERIOD_CURRENT,0,4,priceInfo);
@@ -46,20 +45,19 @@ void OnTick()
       if(priceInfo[1].close>priceInfo[2].high)
         {
         
-         ObjectCreate(_Symbol,"Buy"+bars,OBJ_ARROW_DOWN,0,TimeCurrent()-3600,(priceInfo[1].high+220*_Point));
+         ObjectCreate(_Symbol,"Buy"+bars,OBJ_ARROW_DOWN,0,iTime(_Symbol,PERIOD_CURRENT,1),(priceInfo[1].high+80*_Point));
         
         }
       if(priceInfo[1].close<priceInfo[2].low)
         {
-        
-         ObjectCreate(_Symbol,"Sell"+bars,OBJ_ARROW_UP,0,TimeCurrent()-3600,(priceInfo[1].low-110*_Point));
+
+         ObjectCreate(_Symbol,"Sell"+bars,OBJ_ARROW_UP,0,iTime(_Symbol,PERIOD_CURRENT,1),(priceInfo[1].low-50*_Point));
         
         }
      }
 
   }
 //+------------------------------------------------------------------+
-
 
 
 bool newCandleAppeared(){

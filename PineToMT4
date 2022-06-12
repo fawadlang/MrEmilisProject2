@@ -1,14 +1,15 @@
 //+------------------------------------------------------------------+
-//|                                                MrEmilisProj2.mq4 |
-//|                        Copyright 2021, MetaQuotes Software Corp. |
-//|                                             https://www.mql5.com |
+//|                                                         indy.mq4 |
+//|                                Copyright 2022, Emilis Strimaitis |
+//|                                       strimaitis.emilis@gmai.com |
 //+------------------------------------------------------------------+
-#property copyright "Copyright 2021, MetaQuotes Software Corp."
-#property link      "https://www.mql5.com"
+#property copyright "Copyright 2022, Emilis Strimaitis"
+#property link      "strimaitis.emilis@gmai.com"
 #property version   "1.00"
 #property strict
+#property indicator_chart_window
 //+------------------------------------------------------------------+
-//| Expert initialization function                                   |
+//| Custom indicator initialization function                         |
 //+------------------------------------------------------------------+
 int OnInit()
   {
@@ -39,20 +40,27 @@ void OnTick()
 
    CopyRates(_Symbol,PERIOD_CURRENT,0,4,priceInfo);
    
+  
    if(newCandleAppeared())
      {
      
       if(priceInfo[1].close>priceInfo[2].high)
         {
         
-         ObjectCreate(_Symbol,"Buy"+bars,OBJ_ARROW_DOWN,0,iTime(_Symbol,PERIOD_CURRENT,1),(priceInfo[1].high+80*_Point));
-        
+         ObjectCreate(_Symbol,"Buy"+bars,OBJ_ARROW_DOWN,0,iTime(_Symbol,PERIOD_CURRENT,1),(priceInfo[1].high+400*_Point));
+         ObjectSetInteger(0,"Buy"+bars,OBJPROP_ANCHOR,ANCHOR_TOP);  
+         ObjectSetInteger(0,"Buy"+bars,OBJPROP_ARROWCODE,108);
+         ObjectSetInteger(0,"Buy"+bars,OBJPROP_COLOR,C'38,166,154');
         }
+          
+        
       if(priceInfo[1].close<priceInfo[2].low)
         {
 
-         ObjectCreate(_Symbol,"Sell"+bars,OBJ_ARROW_UP,0,iTime(_Symbol,PERIOD_CURRENT,1),(priceInfo[1].low-50*_Point));
-        
+         ObjectCreate(_Symbol,"Sell"+bars,OBJ_ARROW_UP,0,iTime(_Symbol,PERIOD_CURRENT,1),(priceInfo[1].low-400*_Point));
+         ObjectSetInteger(0,"Sell"+bars,OBJPROP_ANCHOR,ANCHOR_BOTTOM);
+         ObjectSetInteger(0,"Sell"+bars,OBJPROP_ARROWCODE,108);
+         ObjectSetInteger(0,"Sell"+bars,OBJPROP_COLOR,C'239,83,80');
         }
      }
 

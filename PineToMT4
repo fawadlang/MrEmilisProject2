@@ -14,16 +14,7 @@
 extern color color1 = C'38,166,154';              // Bullish color
 extern color color2 = C'239,83,80';              // Bearish color
 
-enum Distance
-  {
-   d1 = 1, // 1
-   d2 = 3, // 2
-   d3 = 5, // 3
-   d4 = 10, // 4
-   d5 = 20 // 5
-  };
-  
-input Distance indicatorDistance = d3;  // Indicator placement (higher - further away from the candle)
+input int distance = 50; // Indicator placement (higher - further away from the candle)
 
 //+------------------------------------------------------------------+
 //| Custom indicator initialization function                         |
@@ -66,7 +57,7 @@ int OnCalculate(const int rates_total,
       if(priceInfo[1].close>priceInfo[2].high)
         {
         
-         ObjectCreate(_Symbol,"Buy"+bars,OBJ_ARROW_DOWN,0,iTime(_Symbol,PERIOD_CURRENT,1),(priceInfo[1].high+indicatorDistance*100*_Point));
+         ObjectCreate(_Symbol,"Buy"+bars,OBJ_ARROW_DOWN,0,iTime(_Symbol,PERIOD_CURRENT,1),(priceInfo[1].high+distance*20*_Point));
          ObjectSetInteger(0,"Buy"+bars,OBJPROP_ANCHOR,ANCHOR_TOP);  
          ObjectSetInteger(0,"Buy"+bars,OBJPROP_ARROWCODE,108);
          ObjectSetInteger(0,"Buy"+bars,OBJPROP_COLOR,color1);
@@ -76,7 +67,7 @@ int OnCalculate(const int rates_total,
       if(priceInfo[1].close<priceInfo[2].low)
         {
 
-         ObjectCreate(_Symbol,"Sell"+bars,OBJ_ARROW_UP,0,iTime(_Symbol,PERIOD_CURRENT,1),(priceInfo[1].low-indicatorDistance*100*_Point));
+         ObjectCreate(_Symbol,"Sell"+bars,OBJ_ARROW_UP,0,iTime(_Symbol,PERIOD_CURRENT,1),(priceInfo[1].low-distance*20*_Point));
          ObjectSetInteger(0,"Sell"+bars,OBJPROP_ANCHOR,ANCHOR_BOTTOM);
          ObjectSetInteger(0,"Sell"+bars,OBJPROP_ARROWCODE,108);
          ObjectSetInteger(0,"Sell"+bars,OBJPROP_COLOR,color2);

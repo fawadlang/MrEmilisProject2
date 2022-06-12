@@ -1,35 +1,53 @@
 //+------------------------------------------------------------------+
-//|                                                         indy.mq4 |
+//|                                              Pullback Viewer.mq4 |
 //|                                Copyright 2022, Emilis Strimaitis |
 //|                                       strimaitis.emilis@gmai.com |
 //+------------------------------------------------------------------+
 #property copyright "Copyright 2022, Emilis Strimaitis"
-#property link      "strimaitis.emilis@gmai.com"
+#property link      "strimaitis.emilis@gmail.com"
 #property version   "1.00"
 #property strict
 #property indicator_chart_window
+#property indicator_color1 C'38,166,154'          // Bullish color
+#property indicator_color2 C'239,83,80'          // Bearish color
+
+extern color color1 = C'38,166,154';              // Bullish color
+extern color color2 = C'239,83,80';              // Bearish color
+
+enum Distance
+  {
+   d1 = 1, // 1
+   d2 = 3, // 2
+   d3 = 5, // 3
+   d4 = 10, // 4
+   d5 = 20 // 5
+  };
+  
+input Distance indicatorDistance = d3;  // Indicator placement (higher - further away from the candle)
+
 //+------------------------------------------------------------------+
 //| Custom indicator initialization function                         |
 //+------------------------------------------------------------------+
 int OnInit()
   {
-//---
+//--- indicator buffers mapping
    
 //---
    return(INIT_SUCCEEDED);
   }
 //+------------------------------------------------------------------+
-//| Expert deinitialization function                                 |
+//| Custom indicator iteration function                              |
 //+------------------------------------------------------------------+
-void OnDeinit(const int reason)
-  {
-//---
-   
-  }
-//+------------------------------------------------------------------+
-//| Expert tick function                                             |
-//+------------------------------------------------------------------+
-void OnTick()
+int OnCalculate(const int rates_total,
+                const int prev_calculated,
+                const datetime &time[],
+                const double &open[],
+                const double &high[],
+                const double &low[],
+                const double &close[],
+                const long &tick_volume[],
+                const long &volume[],
+                const int &spread[])
   {
 //---
    
@@ -40,33 +58,35 @@ void OnTick()
 
    CopyRates(_Symbol,PERIOD_CURRENT,0,4,priceInfo);
    
-  
+
+
    if(newCandleAppeared())
      {
      
       if(priceInfo[1].close>priceInfo[2].high)
         {
         
-         ObjectCreate(_Symbol,"Buy"+bars,OBJ_ARROW_DOWN,0,iTime(_Symbol,PERIOD_CURRENT,1),(priceInfo[1].high+400*_Point));
+         ObjectCreate(_Symbol,"Buy"+bars,OBJ_ARROW_DOWN,0,iTime(_Symbol,PERIOD_CURRENT,1),(priceInfo[1].high+indicatorDistance*100*_Point));
          ObjectSetInteger(0,"Buy"+bars,OBJPROP_ANCHOR,ANCHOR_TOP);  
          ObjectSetInteger(0,"Buy"+bars,OBJPROP_ARROWCODE,108);
-         ObjectSetInteger(0,"Buy"+bars,OBJPROP_COLOR,C'38,166,154');
+         ObjectSetInteger(0,"Buy"+bars,OBJPROP_COLOR,color1);
         }
           
         
       if(priceInfo[1].close<priceInfo[2].low)
         {
 
-         ObjectCreate(_Symbol,"Sell"+bars,OBJ_ARROW_UP,0,iTime(_Symbol,PERIOD_CURRENT,1),(priceInfo[1].low-400*_Point));
+         ObjectCreate(_Symbol,"Sell"+bars,OBJ_ARROW_UP,0,iTime(_Symbol,PERIOD_CURRENT,1),(priceInfo[1].low-indicatorDistance*100*_Point));
          ObjectSetInteger(0,"Sell"+bars,OBJPROP_ANCHOR,ANCHOR_BOTTOM);
          ObjectSetInteger(0,"Sell"+bars,OBJPROP_ARROWCODE,108);
-         ObjectSetInteger(0,"Sell"+bars,OBJPROP_COLOR,C'239,83,80');
+         ObjectSetInteger(0,"Sell"+bars,OBJPROP_COLOR,color2);
         }
      }
 
+//--- return value of prev_calculated for next call
+   return(rates_total);
   }
 //+------------------------------------------------------------------+
-
 
 bool newCandleAppeared(){
 
